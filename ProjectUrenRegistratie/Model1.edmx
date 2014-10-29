@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="UrenRegistratieModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="hourRegistration">
+          <Key>
+            <PropertyRef Name="hourId" />
+          </Key>
+          <Property Name="hourId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userTaskId" Type="int" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="taskId" Type="int" Nullable="false" />
+          <Property Name="projectId" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="responsibilty" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="numberOfHours" Type="int" />
+        </EntityType>
+        <EntityType Name="projects">
+          <Key>
+            <PropertyRef Name="projectId" />
+          </Key>
+          <Property Name="projectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="projectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="projectDescription" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="startDate" Type="datetime" Nullable="false" />
+          <Property Name="endDate" Type="datetime" Nullable="false" />
+          <Property Name="locked" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="task">
+          <Key>
+            <PropertyRef Name="taskId" />
+          </Key>
+          <Property Name="taskId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="projectId" Type="int" Nullable="false" />
+          <Property Name="taskName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="taskDescription" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="lastname" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="8" StoreGeneratedPattern="Computed" />
+          <Property Name="passwrd" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="permission" Type="bit" Nullable="false" />
+          <Property Name="photo" Type="varchar" MaxLength="255" />
+          <Property Name="wachtwoordReset" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserTasks">
+          <Key>
+            <PropertyRef Name="userTaskId" />
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="taskId" />
+            <PropertyRef Name="projectId" />
+          </Key>
+          <Property Name="userTaskId" Type="int" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="taskId" Type="int" Nullable="false" />
+          <Property Name="projectId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_hourRegistration_UserTasks">
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="1" />
+          <End Role="hourRegistration" Type="Self.hourRegistration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTasks">
+              <PropertyRef Name="userTaskId" />
+              <PropertyRef Name="userId" />
+              <PropertyRef Name="taskId" />
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="hourRegistration">
+              <PropertyRef Name="userTaskId" />
+              <PropertyRef Name="userId" />
+              <PropertyRef Name="taskId" />
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_projects">
+          <End Role="projects" Type="Self.projects" Multiplicity="1" />
+          <End Role="task" Type="Self.task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_projects">
+          <End Role="projects" Type="Self.projects" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="taskId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="taskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UrenRegistratieModelStoreContainer">
+          <EntitySet Name="hourRegistration" EntityType="Self.hourRegistration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="projects" EntityType="Self.projects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="task" EntityType="Self.task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_hourRegistration_UserTasks" Association="Self.FK_hourRegistration_UserTasks">
+            <End Role="UserTasks" EntitySet="UserTasks" />
+            <End Role="hourRegistration" EntitySet="hourRegistration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_projects" Association="Self.FK_task_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="task" EntitySet="task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_projects" Association="Self.FK_UserTasks_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_task" Association="Self.FK_UserTasks_task">
+            <End Role="task" EntitySet="task" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_user" Association="Self.FK_UserTasks_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UrenRegistratieModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="hourRegistration">
+          <Key>
+            <PropertyRef Name="hourId" />
+          </Key>
+          <Property Name="hourId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userTaskId" Type="Int32" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="taskId" Type="Int32" Nullable="false" />
+          <Property Name="projectId" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="responsibilty" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="numberOfHours" Type="Int32" />
+          <NavigationProperty Name="UserTask" Relationship="Self.FK_hourRegistration_UserTasks" FromRole="hourRegistration" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="project">
+          <Key>
+            <PropertyRef Name="projectId" />
+          </Key>
+          <Property Name="projectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="projectName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="projectDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="startDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="endDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="locked" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tasks" Relationship="Self.FK_task_projects" FromRole="projects" ToRole="task" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_projects" FromRole="projects" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="task">
+          <Key>
+            <PropertyRef Name="taskId" />
+          </Key>
+          <Property Name="taskId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="projectId" Type="Int32" Nullable="false" />
+          <Property Name="taskName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="taskDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="project" Relationship="Self.FK_task_projects" FromRole="task" ToRole="projects" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_task" FromRole="task" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="8" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="passwrd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="permission" Type="Boolean" Nullable="false" />
+          <Property Name="photo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="wachtwoordReset" Type="Boolean" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_user" FromRole="Users" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="UserTask">
+          <Key>
+            <PropertyRef Name="userTaskId" />
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="taskId" />
+            <PropertyRef Name="projectId" />
+          </Key>
+          <Property Name="userTaskId" Type="Int32" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="taskId" Type="Int32" Nullable="false" />
+          <Property Name="projectId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hourRegistrations" Relationship="Self.FK_hourRegistration_UserTasks" FromRole="UserTasks" ToRole="hourRegistration" />
+          <NavigationProperty Name="project" Relationship="Self.FK_UserTasks_projects" FromRole="UserTasks" ToRole="projects" />
+          <NavigationProperty Name="task" Relationship="Self.FK_UserTasks_task" FromRole="UserTasks" ToRole="task" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserTasks_user" FromRole="UserTasks" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_hourRegistration_UserTasks">
+          <End Role="UserTasks" Type="Self.UserTask" Multiplicity="1" />
+          <End Role="hourRegistration" Type="Self.hourRegistration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTasks">
+              <PropertyRef Name="userTaskId" />
+              <PropertyRef Name="userId" />
+              <PropertyRef Name="taskId" />
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="hourRegistration">
+              <PropertyRef Name="userTaskId" />
+              <PropertyRef Name="userId" />
+              <PropertyRef Name="taskId" />
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_task_projects">
+          <End Role="projects" Type="Self.project" Multiplicity="1" />
+          <End Role="task" Type="Self.task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="task">
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_projects">
+          <End Role="projects" Type="Self.project" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="projectId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="projectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_task">
+          <End Role="task" Type="Self.task" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="task">
+              <PropertyRef Name="taskId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="taskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_user">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UrenRegistratieEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="hourRegistrations" EntityType="Self.hourRegistration" />
+          <EntitySet Name="projects" EntityType="Self.project" />
+          <EntitySet Name="tasks" EntityType="Self.task" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTask" />
+          <AssociationSet Name="FK_hourRegistration_UserTasks" Association="Self.FK_hourRegistration_UserTasks">
+            <End Role="UserTasks" EntitySet="UserTasks" />
+            <End Role="hourRegistration" EntitySet="hourRegistrations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_task_projects" Association="Self.FK_task_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="task" EntitySet="tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_projects" Association="Self.FK_UserTasks_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_task" Association="Self.FK_UserTasks_task">
+            <End Role="task" EntitySet="tasks" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_user" Association="Self.FK_UserTasks_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UrenRegistratieModelStoreContainer" CdmEntityContainer="UrenRegistratieEntities">
+          <EntitySetMapping Name="hourRegistrations">
+            <EntityTypeMapping TypeName="UrenRegistratieModel.hourRegistration">
+              <MappingFragment StoreEntitySet="hourRegistration">
+                <ScalarProperty Name="hourId" ColumnName="hourId" />
+                <ScalarProperty Name="userTaskId" ColumnName="userTaskId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="taskId" ColumnName="taskId" />
+                <ScalarProperty Name="projectId" ColumnName="projectId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="responsibilty" ColumnName="responsibilty" />
+                <ScalarProperty Name="numberOfHours" ColumnName="numberOfHours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="projects">
+            <EntityTypeMapping TypeName="UrenRegistratieModel.project">
+              <MappingFragment StoreEntitySet="projects">
+                <ScalarProperty Name="projectId" ColumnName="projectId" />
+                <ScalarProperty Name="projectName" ColumnName="projectName" />
+                <ScalarProperty Name="projectDescription" ColumnName="projectDescription" />
+                <ScalarProperty Name="startDate" ColumnName="startDate" />
+                <ScalarProperty Name="endDate" ColumnName="endDate" />
+                <ScalarProperty Name="locked" ColumnName="locked" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tasks">
+            <EntityTypeMapping TypeName="UrenRegistratieModel.task">
+              <MappingFragment StoreEntitySet="task">
+                <ScalarProperty Name="taskId" ColumnName="taskId" />
+                <ScalarProperty Name="projectId" ColumnName="projectId" />
+                <ScalarProperty Name="taskName" ColumnName="taskName" />
+                <ScalarProperty Name="taskDescription" ColumnName="taskDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="UrenRegistratieModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="passwrd" ColumnName="passwrd" />
+                <ScalarProperty Name="permission" ColumnName="permission" />
+                <ScalarProperty Name="photo" ColumnName="photo" />
+                <ScalarProperty Name="wachtwoordReset" ColumnName="wachtwoordReset" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTasks">
+            <EntityTypeMapping TypeName="UrenRegistratieModel.UserTask">
+              <MappingFragment StoreEntitySet="UserTasks">
+                <ScalarProperty Name="userTaskId" ColumnName="userTaskId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="taskId" ColumnName="taskId" />
+                <ScalarProperty Name="projectId" ColumnName="projectId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
