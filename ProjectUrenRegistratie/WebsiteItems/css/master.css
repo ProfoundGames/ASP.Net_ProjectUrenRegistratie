@@ -1,0 +1,42 @@
+﻿*{
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    background-color: red;
+}
+
+#header{
+    background-color: blue;
+}
+
+#logo{
+    float: left;
+}
+
+#menu{
+    float: left;
+}
+
+#welcome{
+    left;
+}
+
+#content{
+    background-color: yellow;
+}
+
+
+
+footer{
+    background-color: purple;
+}
+
+#websiteLayout{
+    float: left;
+}
+
+#rightFooter{
+    float: left;
+}

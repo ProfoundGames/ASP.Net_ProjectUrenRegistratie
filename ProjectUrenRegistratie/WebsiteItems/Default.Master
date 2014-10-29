@@ -1,0 +1,67 @@
+﻿
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Default.master.cs" Inherits="ProjectUrenRegistratie.WebsiteItems.Default" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+
+    <link rel="stylesheet" type="text/css" href="css/master.css" /> 
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+
+<body>
+    
+    <div id="header">
+
+        <div id="logo">
+
+
+
+        </div>
+
+
+        <div id="menu">
+
+
+
+        </div>
+
+
+        <div id="welcome">
+
+
+
+        </div>
+
+    </div>
+    
+    
+    <div id="content">
+
+        
+
+    </div>
+
+
+    <footer>
+
+        <div id="websiteLayout">
+
+
+
+        </div>
+
+
+        <div id="rightFooter">
+
+
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
